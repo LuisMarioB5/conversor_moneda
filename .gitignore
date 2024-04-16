@@ -30,4 +30,5 @@ bin/
 
 ### Excluidos manualmente ###
 .idea/
+target/
 *.iml
