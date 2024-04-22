@@ -1,0 +1,37 @@
+{
+  "ARS": {
+    "code": "ARS",
+    "name": "Peso argentino",
+    "country": "Argentina"
+  },
+  "LYD": {
+    "code": "LYD",
+    "name": "Dinar libio",
+    "country": "Libia"
+  },
+  "SSP": {
+    "code": "SSP",
+    "name": "Libra sursudanesa",
+    "country": "Sudán del Sur"
+  },
+  "SYP": {
+    "code": "SYP",
+    "name": "Libra siria",
+    "country": "Siria"
+  },
+  "VES": {
+    "code": "VES",
+    "name": "Bolívar soberano venezolano",
+    "country": "Venezuela"
+  },
+  "YER": {
+    "code": "YER",
+    "name": "Rial yemení",
+    "country": "Yemen"
+  },
+  "ZWL": {
+    "code": "ZWL",
+    "name": "Dólar zimbabuense",
+    "country": "Zimbabue"
+  }
+}
