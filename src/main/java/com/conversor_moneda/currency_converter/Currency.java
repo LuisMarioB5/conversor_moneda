@@ -5,59 +5,120 @@ import com.google.gson.JsonObject;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.net.URL;
 
+/**
+ * La clase Currency representa una moneda con su código, nombre, país y tasa de conversión a USD.
+ */
 public class Currency {
-    private String code;
-    private String name;
-    private String country;
-    private final float rateToUSD;
+    private final String code; // Código de la moneda
+    private final String name; // Nombre de la moneda
+    private final String country; // País de la moneda
+    private final float rateToUSD; // Tasa de conversión a USD
 
-    public Currency(String code, String name, String country, float rateToUSD) {
-        // Adaptar para que tome los valores desde los json
+    /**
+     * Constructor de la clase Currency.
+     *
+     * @param currencyCode Código de la moneda en formato ISO 4217
+     */
+    public Currency(String currencyCode) {
+        // Asegura que el código de la moneda esté en mayúsculas
+        currencyCode = currencyCode.toUpperCase();
 
-        this.code = code;
-        this.name = name;
-        this.country = country;
-        this.rateToUSD = rateToUSD;
+        // Ruta donde se encuentran los archivos JSON
+        String resourcesPath = "src/main/resources/";
+
+        // Objeto Gson para manejar JSON
+        Gson gson = new Gson();
+
+        // Objetos JsonObject para almacenar los datos del JSON
+        JsonObject supportedCurrenciesJsonObject = null;
+        JsonObject convertionRateJsonObject = null;
+        try {
+            // Lee el archivo JSON de monedas admitidas
+            JsonObject jsonObject = gson.fromJson(new FileReader(resourcesPath + "supported_currencies.json"),
+                    JsonObject.class);
+            // Obtiene el objeto JSON de la moneda especificada
+            supportedCurrenciesJsonObject = jsonObject.getAsJsonObject(currencyCode);
+
+            // Lee el archivo JSON de tasas de conversión
+            convertionRateJsonObject = gson.fromJson(new FileReader(resourcesPath + "conversion_rates.json"),
+                    JsonObject.class);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Inicializa los atributos de la moneda
+        this.code = supportedCurrenciesJsonObject.get("code").getAsString();
+        this.name = supportedCurrenciesJsonObject.get("name").getAsString();
+        this.country = supportedCurrenciesJsonObject.get("country").getAsString();
+        this.rateToUSD = convertionRateJsonObject.get(currencyCode).getAsFloat();
     }
 
+    /**
+     * Obtiene el código de la moneda.
+     *
+     * @return Código de la moneda
+     */
+    public String getCode() {
+        return code;
+    }
+
+    /**
+     * Obtiene el nombre de la moneda.
+     *
+     * @return Nombre de la moneda
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Obtiene el país de la moneda.
+     *
+     * @return País de la moneda
+     */
+    public String getCountry() {
+        return country;
+    }
+
+    /**
+     * Obtiene la tasa de conversión de la moneda a USD.
+     *
+     * @return Tasa de conversión a USD
+     */
     public float getRateToUSD() {
         return rateToUSD;
     }
 
+    /**
+     * Devuelve una representación de cadena de la moneda.
+     *
+     * @return Representación de cadena de la moneda
+     */
+    @Override
+    public String toString() {
+        return "code: \"" + this.code + '\"' +
+                "\nname: \"" + this.name + '\"' +
+                "\ncountry: \"" + this.country + '\"' +
+                "\nrateToUSD: " + this.rateToUSD;
+    }
 
+    /**
+     * Método principal para probar la clase Currency.
+     *
+     * @param args Argumentos de la línea de comandos
+     */
     public static void main(String[] args) {
+        // Crear una instancia de la moneda DOP (Peso Dominicano)
+        Currency dop = new Currency("dop");
+        System.out.println(dop);
 
-        String filePath = "C:\\Users\\LUISM\\Desktop\\conversor_moneda\\src\\main\\resources\\supported_currencies.json";
+        // Crear una instancia de la moneda USD (Dólar Estadounidense)
+        Currency usd = new Currency("usd");
+        System.out.println("\n" + usd);
 
-        try {
-
-            Gson gson = new Gson();
-
-            JsonObject jsonObject = gson.fromJson(new FileReader(filePath), JsonObject.class);
-            JsonObject aedJson = jsonObject.getAsJsonObject("AED");
-
-            String code = aedJson.get("code").getAsString();
-            String name = aedJson.get("name").getAsString();
-            String country = aedJson.get("country").getAsString();
-            float rateToUSD = 0f;
-
-            System.out.println("AED Content:" +
-                    "\ncode: " + code +
-                    "\nname: " + name +
-                    "\ncountry: "+ country +
-                    "\nrate to USD: " + rateToUSD);
-
-        } catch (FileNotFoundException e) {
-            System.out.println("Error, no se encontró el archivo: " + e);
-        }
-
-        URL resourceUrl = Currency.class.getClassLoader().getResource("supported_currencies.json");
-        if (resourceUrl == null) {
-            System.err.println("No se pudo encontrar el archivo JSON en el directorio resources.");
-            return;
-        }
-        System.out.println(resourceUrl);
+        // Crear una instancia de la moneda EUR (Euro)
+        Currency eur = new Currency("eur");
+        System.out.println("\n" + eur);
     }
 }

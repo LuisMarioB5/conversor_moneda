@@ -1,4 +1,4 @@
-package com.conversor_moneda.logic;
+package com.conversor_moneda.logic.json;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -6,7 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ConversorJson {
+public class Converter {
 
     /**
      * Función que convierte un JSON en String a un Map, el JSON debe contener valores numéricos (enteros o decimales).
@@ -102,7 +102,7 @@ public class ConversorJson {
 //        String jsonString = Api.getResponse();
 //        String claveABuscar = "conversion_rates";
 
-        ConversorJson conversorJson = new ConversorJson();
-        mostrarContenidoMapa(conversorJson.ConvertirJsonMap(jsonString, claveABuscar));
+        Converter converter = new Converter();
+        mostrarContenidoMapa(converter.ConvertirJsonMap(jsonString, claveABuscar));
     }
 }
