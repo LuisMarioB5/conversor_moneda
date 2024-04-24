@@ -1,56 +1,65 @@
 package com.conversor_moneda.ui;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
 
 
     public static void showUi() {
-        Scanner scanner = new Scanner(System.in);
         String bienvenida = """
-                ###############################################################
+               ###########################################################
+               
+               *** Bienvenido/a al conversor de divisas en tiempo real ***
+               
+               ###########################################################
+               """;
 
-                ***** Bienvenido/a al conversor de divisas en tiempo real *****
-                
-                ###############################################################
-                """;
+
         String menuInicial = """
-                
-                Selecciona la opción que desees:
-                1. Convertir divisas
-                2. Consultar conversiones anteriores
-                3. Salir del programa
-                
-                """;
+               
+               Selecciona la opción que desees:
+               1. Consultar la lista de divisas
+               2. Convertir divisa
+               3. Consultar conversiones anteriores
+               4. Salir del programa
+               """;
         short opcionElegida = 0;
+        Scanner scanner = new Scanner(System.in);
 
-        while (opcionElegida != 3){
+        while (true) {
+
             if (opcionElegida == 0) {
-                System.out.print(bienvenida + menuInicial + "Opción: ");
+                System.out.print(bienvenida + menuInicial + "\nOpción: ");
             } else {
-                System.out.print(menuInicial + "Opción: ");
+                System.out.print(menuInicial + "\nOpción: ");
+
             }
             opcionElegida = scanner.nextShort();
 
             switch (opcionElegida) {
                 case 1:
-                    System.out.println("Mostrando el menú para convertir divisas....");
-                    menuConvertir();
-                    scanner.next(); // Detiene el programa hasta que el usuario ingrese un caracter y de a enter.
+                    new ListasDivisas();
+                    pauseConsole();
                     break;
 
                 case 2:
-                    System.out.println("Mostrando el menú para consultar las conversiones anteriores....");
-                    scanner.next(); // Detiene el programa hasta que el usuario ingrese un caracter y de a enter.
+                    menuConvertir();
+                    pauseConsole();
                     break;
 
                 case 3:
-                    System.out.println("Saliendo del conversor de divisas...");
+                    System.out.println("Consultando las conversiones anteriores...");
+                    pauseConsole();
                     break;
 
+                case 4:
+                    System.out.println("\nSaliendo del conversor...");
+                    return;
+
                 default:
-                    System.out.println("Opción incorrecta, vuelva a intentar...");
-                    scanner.next(); // Detiene el programa hasta que el usuario ingrese un caracter y de a enter.
+                    System.out.println("\nOpción incorrecta, vuelva a intentar...");
+                    pauseConsole();
                     break;
             }
         }
@@ -58,52 +67,56 @@ public class Main {
 
     public static void menuConvertir() {
         Scanner scanner = new Scanner(System.in);
-        String menuInicial = """
-                
-                Selecciona la opción que desees:
-                1. Consultar divisas hábiles
-                2. Convertir divisa
-                3. Volver al menú anterior
-                4. Salir del programa
-                
-                """;
-        short opcionElegida = 0;
 
-        while (opcionElegida != 3){
+        System.out.println();
+        String codeFrom = getCurrencyCode(scanner, "Ingresa el código de la divisa que deseeas cambiar: ");
+        if (codeFrom == null) return;
 
-            System.out.print(menuInicial + "Opción: ");
-            opcionElegida = scanner.nextShort();
+        String codeTo = getCurrencyCode(scanner, "Ingresa el código de la divisa que deseeas obtener: ");
+        if (codeTo == null) return;
 
-            switch (opcionElegida) {
-                case 1:
-                    System.out.println("Consultando las divisas habiles....");
-                    scanner.next(); // Detiene el programa hasta que el usuario ingrese un caracter y de a enter.
-                    break;
+        System.out.print("Ingresa la cantidad que deseas convertir de " + codeFrom + " a " + codeTo + ": ");
+        float amount = scanner.nextFloat();
 
-                case 2:
-                    System.out.println("Mostrando el menú para convertir las divisas....");
-                    scanner.next(); // Detiene el programa hasta que el usuario ingrese un caracter y de a enter.
-                    break;
+        //PRUEBA
+        System.out.println("\nDATOS DE LA PRUEBA:\ncodeTo: " + codeTo + "\ncodeFrom: " + codeFrom + "\namount: " + amount);
 
-                case 3:
-                    System.out.println("Volviendo al menú anterior...");
-                    break;
+        //TODO COMENZAR EL PROCESO DE CONVERSION
+    }
 
-                case 4:
-                    System.out.println("Saliendo del conversor...");
-                    return;
+    public static String getCurrencyCode(Scanner scanner, String message) {
+        System.out.print(message);
+        String code = scanner.nextLine();
+        code = code.toUpperCase();
 
-                default:
-                    System.out.println("Opción incorrecta, vuelva a intentar...");
-                    scanner.next(); // Detiene el programa hasta que el usuario ingrese un caracter y de a enter.
-                    break;
-            }
+        if (code.length() != 3) {
+            System.err.println("Error: Los códigos de las monedas contienen exactamente tres caracteres.");
+            System.out.println("Vuelve a intentarlo...");
+            return null;
+        }
+        return code;
+    }
+
+
+
+
+
+
+
+    // Método para pausar la consola
+    public static void pauseConsole() {
+        System.out.print("Presiona Enter para continuar...");
+        try {
+            int input = System.in.read();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
         }
     }
 
     public static void main(String[] args) {
         System.out.println("Hola, no he empezado aquí...");
-
-        showUi();
+        pauseConsole();
+//        showUi();
+        menuConvertir();
     }
 }

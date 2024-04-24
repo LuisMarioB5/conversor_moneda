@@ -1,7 +1,7 @@
 {
   "KPW": {
-    "Currency Code": "KPW",
-    "Currency Name": "Won norcoreano",
-    "Country": "Corea del Norte"
+    "code": "KPW",
+    "name": "Won norcoreano",
+    "country": "Corea del Norte"
   }
 }
