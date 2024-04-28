@@ -2,10 +2,10 @@ package com.conversor_moneda.api;
 
 import com.conversor_moneda.logic.file.File;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 
@@ -26,6 +26,9 @@ public class Api {
 
     // Almacena la respuesta de la API
     private String response;
+
+    // Almacena el directorio del archivo que contine la respuesta de la API
+    private final String jsonFilePath = "src/main/resources/conversion_rates.json";
 
     /**
      * Método que envía una solicitud GET a la API de tipos de cambio, y guarda la respuesta en la variable response.
@@ -76,8 +79,39 @@ public class Api {
         JsonObject jsonObject = gson.fromJson(new StringReader(this.getResponse()), JsonObject.class);
         JsonObject jsonFilter = jsonObject.getAsJsonObject("conversion_rates");
 
-        String filePath = "src/main/resources/conversion_rates.json";
-        File.save(gson.toJson(jsonFilter), filePath);
+        File.save(gson.toJson(jsonFilter), getJsonFilePath());
+    }
+
+    //TODO
+    // APLICAR ESTE METODO EN LA PARTE DE PREGUNTAR EL CODIGO DE LA MONEDA AL USUARIO,
+    // PARA ASEGURARSE QUE EL CODIGO QUE INTRODUJO EL USUAIRO EXISTE.
+
+
+    public boolean currencyCodeExits(String currencyCode) {
+        currencyCode = currencyCode.toUpperCase();
+
+        try {
+            FileReader reader = new FileReader(getJsonFilePath());
+
+            JsonElement jsonElement = JsonParser.parseReader(reader);
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+
+            for (String key : jsonObject.keySet()) {
+                if (key.equals(currencyCode)){
+                    return true;
+                }
+            }
+
+            reader.close();
+            return false;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public String getJsonFilePath() {
+        return jsonFilePath;
     }
 
     /**
@@ -86,12 +120,15 @@ public class Api {
      * @param args Los argumentos de la línea de comandos
      */
     public static void main(String[] args) {
-        try {
-            Api api = new Api();
-            api.saveJsonAsFile();
-        } catch (IllegalStateException e) {
-            System.err.println(e.getMessage());
-        }
-        System.out.println("El programa terminó sin detenerse...");
+//        try {
+//            Api api = new Api();
+//            api.saveJsonAsFile();
+//        } catch (IllegalStateException e) {
+//            System.err.println(e.getMessage());
+//        }
+//        System.out.println("El programa terminó sin detenerse...");
+
+        Api api = new Api();
+        System.out.println(api.currencyCodeExits("usKd"));
     }
 }

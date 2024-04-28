@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class ListasDivisas {
 
-    public ListasDivisas() {
+    public static void show() {
         String menuInicial = """
               
               Selecciona la opción que desees:

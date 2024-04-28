@@ -1,5 +1,9 @@
 package com.conversor_moneda.ui;
 
+import com.conversor_moneda.api.Api;
+import com.conversor_moneda.currency_converter.Converter;
+import com.conversor_moneda.currency_converter.Currency;
+
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -39,7 +43,7 @@ public class Main {
 
             switch (opcionElegida) {
                 case 1:
-                    new ListasDivisas();
+                    ListasDivisas.show();
                     pauseConsole();
                     break;
 
@@ -78,10 +82,13 @@ public class Main {
         System.out.print("Ingresa la cantidad que deseas convertir de " + codeFrom + " a " + codeTo + ": ");
         float amount = scanner.nextFloat();
 
-        //PRUEBA
-        System.out.println("\nDATOS DE LA PRUEBA:\ncodeTo: " + codeTo + "\ncodeFrom: " + codeFrom + "\namount: " + amount);
+        scanner.close();
 
         //TODO COMENZAR EL PROCESO DE CONVERSION
+        float conversion = Converter.convert(codeFrom, codeTo, amount);
+
+        //PRUEBA
+        System.out.println("\nDATOS DE LA PRUEBA:\ncodeFrom: " + codeFrom + "\ncodeTo: " + codeTo + "\namount (" + codeFrom + "): " + amount + "\nValor convertido: " + conversion);
     }
 
     public static String getCurrencyCode(Scanner scanner, String message) {
@@ -94,6 +101,11 @@ public class Main {
             System.out.println("Vuelve a intentarlo...");
             return null;
         }
+
+        //TODO AQUI DEBE COLOCARSE LA VEFICACION DE QUE EL CODIGO DE LA MONEDA EXISTA
+        Api api = new Api();
+        api.currencyCodeExits(code);
+
         return code;
     }
 

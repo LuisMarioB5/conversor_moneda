@@ -8,20 +8,23 @@ public class Converter {
     /**
      * Convierte una cantidad de una moneda a otra.
      *
-     * @param from   La moneda de origen.
-     * @param to     La moneda de destino.
-     * @param amount La cantidad a convertir.
-     * @return La cantidad convertida.
+     * @param codeFrom  Código de la moneda (String) de origen.
+     * @param codeTo    Código de la moneda (String) de destino.
+     * @param amount    La cantidad (en float) a convertir.
+     * @return La cantidad convertida en float.
      */
-    public static float convert(Currency from, Currency to, float amount) {
-        // Si la moneda de origen es igual a la moneda de destino, devolvemos la misma cantidad
-        if (from == to) {
+    public static float convert(String codeFrom, String codeTo, float amount) {
+        Currency from = new Currency(codeFrom);
+        Currency to = new Currency(codeTo);
+
+        // Si la moneda de origen es igual a la moneda de destino, se devuelve la misma cantidad
+        if (from.equals(to)) {
             return amount;
         }
 
-        // Convertimos la cantidad a dólares
+        // Se convierte la cantidad a dólares
         float amountInUSD = amount / from.getRateToUSD();
-        // Convertimos la cantidad de dólares a la moneda de destino
+        // Se convierte la cantidad de dólares a la moneda de destino
         return amountInUSD * to.getRateToUSD();
     }
 }
