@@ -1,16 +1,18 @@
 package com.conversor_moneda.ui;
 
-import com.conversor_moneda.api.Api;
-import com.conversor_moneda.currency_converter.Converter;
-import com.conversor_moneda.currency_converter.Currency;
+import com.conversor_moneda.logic.console.Console;
+import com.conversor_moneda.ui.menus.Convertir;
+import com.conversor_moneda.ui.menus.ListasDivisas;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
 
-
+    /**
+     * Muestra la interfaz de usuario principal del conversor de divisas.
+     */
     public static void showUi() {
+        // Mensaje de bienvenida
         String bienvenida = """
                ###########################################################
                
@@ -19,7 +21,7 @@ public class Main {
                ###########################################################
                """;
 
-
+        // Menú inicial
         String menuInicial = """
                
                Selecciona la opción que desees:
@@ -28,33 +30,36 @@ public class Main {
                3. Consultar conversiones anteriores
                4. Salir del programa
                """;
+
         short opcionElegida = 0;
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-
+            // Mostrar el mensaje de bienvenida y el menú inicial
             if (opcionElegida == 0) {
                 System.out.print(bienvenida + menuInicial + "\nOpción: ");
             } else {
                 System.out.print(menuInicial + "\nOpción: ");
-
             }
+
+            // Leer la opción elegida por el usuario
             opcionElegida = scanner.nextShort();
 
+            // Realizar acciones según la opción elegida
             switch (opcionElegida) {
                 case 1:
                     ListasDivisas.show();
-                    pauseConsole();
+                    Console.pause();
                     break;
 
                 case 2:
-                    menuConvertir();
-                    pauseConsole();
+                    Convertir.menuConvertir();
+                    Console.pause();
                     break;
 
                 case 3:
                     System.out.println("Consultando las conversiones anteriores...");
-                    pauseConsole();
+                    Console.pause();
                     break;
 
                 case 4:
@@ -63,72 +68,14 @@ public class Main {
 
                 default:
                     System.out.println("\nOpción incorrecta, vuelva a intentar...");
-                    pauseConsole();
+                    Console.pause();
                     break;
             }
         }
     }
 
-    public static void menuConvertir() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println();
-        String codeFrom = getCurrencyCode(scanner, "Ingresa el código de la divisa que deseeas cambiar: ");
-        if (codeFrom == null) return;
-
-        String codeTo = getCurrencyCode(scanner, "Ingresa el código de la divisa que deseeas obtener: ");
-        if (codeTo == null) return;
-
-        System.out.print("Ingresa la cantidad que deseas convertir de " + codeFrom + " a " + codeTo + ": ");
-        float amount = scanner.nextFloat();
-
-        scanner.close();
-
-        //TODO COMENZAR EL PROCESO DE CONVERSION
-        float conversion = Converter.convert(codeFrom, codeTo, amount);
-
-        //PRUEBA
-        System.out.println("\nDATOS DE LA PRUEBA:\ncodeFrom: " + codeFrom + "\ncodeTo: " + codeTo + "\namount (" + codeFrom + "): " + amount + "\nValor convertido: " + conversion);
-    }
-
-    public static String getCurrencyCode(Scanner scanner, String message) {
-        System.out.print(message);
-        String code = scanner.nextLine();
-        code = code.toUpperCase();
-
-        if (code.length() != 3) {
-            System.err.println("Error: Los códigos de las monedas contienen exactamente tres caracteres.");
-            System.out.println("Vuelve a intentarlo...");
-            return null;
-        }
-
-        //TODO AQUI DEBE COLOCARSE LA VEFICACION DE QUE EL CODIGO DE LA MONEDA EXISTA
-        Api api = new Api();
-        api.currencyCodeExits(code);
-
-        return code;
-    }
-
-
-
-
-
-
-
-    // Método para pausar la consola
-    public static void pauseConsole() {
-        System.out.print("Presiona Enter para continuar...");
-        try {
-            int input = System.in.read();
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
-    }
-
     public static void main(String[] args) {
-        System.out.println("Hola, no he empezado aquí...");
-        pauseConsole();
-//        showUi();
-        menuConvertir();
+        // Llama al método para mostrar la interfaz de usuario
+        showUi();
     }
 }

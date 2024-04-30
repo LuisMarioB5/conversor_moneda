@@ -1,5 +1,6 @@
-package com.conversor_moneda.ui;
+package com.conversor_moneda.ui.menus;
 
+import com.conversor_moneda.logic.console.Console;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -29,20 +30,17 @@ public class ListasDivisas {
             switch (opcionElegida) {
                 case 1:
                     showNotSupportedCurrenciesList();
-                    Main.pauseConsole();
-
+                    Console.pause();
                     break;
 
                 case 2:
                     showHighVolatilityCurrenciesList();
-                    Main.pauseConsole();
-
+                    Console.pause();
                     break;
 
                 case 3:
                     showSupportedCurrenciesList();
-                    Main.pauseConsole();
-
+                    Console.pause();
                     break;
 
                 case 4:
@@ -51,7 +49,7 @@ public class ListasDivisas {
 
                 default:
                     System.out.println("\nOpción incorrecta, vuelva a intentar...");
-                    Main.pauseConsole();
+                    Console.pause();
                     break;
             }
         }

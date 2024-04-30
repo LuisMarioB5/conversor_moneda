@@ -1,14 +1,12 @@
-package com.conversor_moneda.api;
+package com.conversor_moneda.logic.api;
 
+import com.conversor_moneda.logic.error.MyError;
 import com.conversor_moneda.logic.file.File;
-
 import com.google.gson.*;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
-
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -28,7 +26,7 @@ public class Api {
     private String response;
 
     // Almacena el directorio del archivo que contine la respuesta de la API
-    private final String jsonFilePath = "src/main/resources/conversion_rates.json";
+    private String jsonFilePath = "src/main/resources/conversion_rates.json";
 
     /**
      * Método que envía una solicitud GET a la API de tipos de cambio, y guarda la respuesta en la variable response.
@@ -72,20 +70,17 @@ public class Api {
     /**
      * Método que guarda el JSON en un archivo nombrado "conversion_rates" en la carpeta de resources del proyecto.
      */
-    public void saveJsonAsFile() {
+    public void saveJsonAsFile(String jsonFilePath) {
+//        this.setJsonFilePath(jsonFilePath);
+
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
         JsonObject jsonObject = gson.fromJson(new StringReader(this.getResponse()), JsonObject.class);
         JsonObject jsonFilter = jsonObject.getAsJsonObject("conversion_rates");
 
-        File.save(gson.toJson(jsonFilter), getJsonFilePath());
+        File.save(gson.toJson(jsonFilter), this.getJsonFilePath());
     }
-
-    //TODO
-    // APLICAR ESTE METODO EN LA PARTE DE PREGUNTAR EL CODIGO DE LA MONEDA AL USUARIO,
-    // PARA ASEGURARSE QUE EL CODIGO QUE INTRODUJO EL USUAIRO EXISTE.
-
 
     public boolean currencyCodeExits(String currencyCode) {
         currencyCode = currencyCode.toUpperCase();
@@ -103,11 +98,17 @@ public class Api {
             }
 
             reader.close();
+            MyError.println("Error: el código \"" + currencyCode + "\" no existe.");
+            MyError.println("Vuelve a intentarlo con un código válido...\n");
             return false;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public void setJsonFilePath(String jsonFilePath) {
+        this.jsonFilePath = jsonFilePath;
     }
 
     public String getJsonFilePath() {
@@ -124,7 +125,7 @@ public class Api {
 //            Api api = new Api();
 //            api.saveJsonAsFile();
 //        } catch (IllegalStateException e) {
-//            System.err.println(e.getMessage());
+//            MyError.println(e.getMessage());
 //        }
 //        System.out.println("El programa terminó sin detenerse...");
 
