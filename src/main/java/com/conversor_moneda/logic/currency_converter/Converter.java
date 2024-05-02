@@ -1,5 +1,6 @@
 package com.conversor_moneda.logic.currency_converter;
 
+import com.conversor_moneda.logic.error.MyError;
 import com.conversor_moneda.logic.historial.Conversion;
 import com.conversor_moneda.logic.historial.ConversionHistory;
 
@@ -66,7 +67,28 @@ public class Converter {
         return amountInUSD * to.getRateToUSD();
     }
 
+    public static ConversionHistory getConversionHistory() {
+        if (conversionHistory.isEmpty()) {
+            MyError.println("Error: No se ha realizado ninguna conversion, realice al menos una y vuelva a intentar...\n");
+        }
+
+        return conversionHistory;
+    }
+
+    /**
+     * Verifica si hay conversiones en el historial.
+     *
+     * @return true si hay conversiones en el historial, false si está vacío.
+     */
+    public static boolean hasConversionHistory() {
+        return !conversionHistory.isEmpty();
+    }
+
+
     public static void main(String[] args) {
+        System.out.println(getConversionHistory());
+
+
         // Ejemplos de uso
         System.out.println(Converter.convert("mxn", "dop", 10));
         System.out.println(Converter.convert("usd", "dop", 10));

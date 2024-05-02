@@ -39,6 +39,34 @@ public class Conversion {
         this.conversionTime = conversionTime;
     }
 
+    public Currency getOriginCurrency() {
+        return originCurrency;
+    }
+
+    public Currency getTargetCurrency() {
+        return targetCurrency;
+    }
+
+    public float getAmountToConvert() {
+        return amountToConvert;
+    }
+
+    public float getAmountConverted() {
+        return amountConverted;
+    }
+
+    public float getConversionRate() {
+        return conversionRate;
+    }
+
+    public LocalDate getConversionDate() {
+        return conversionDate;
+    }
+
+    public LocalTime getConversionTime() {
+        return conversionTime;
+    }
+
     /**
      * Devuelve una representación de cadena de esta conversión.
      *
@@ -46,12 +74,12 @@ public class Conversion {
      */
     @Override
     public String toString() {
-        return "originCurrency: " + originCurrency.getCode() +
-                "\ntargetCurrency: " + targetCurrency.getCode() +
-                "\namountToCovert: [" + originCurrency.getCode() + "] $" + amountToConvert +
-                "\namountCoverted: [" + targetCurrency.getCode() + "] $" + amountConverted +
-                "\nconversionRate: " + conversionRate +
-                "\nconversionDate: " + conversionDate +
-                "\nconversionTime: " + conversionTime;
+        return "Moneda de origen: " + originCurrency.getCode() +
+                "\nMoneda objetivo: " + targetCurrency.getCode() +
+                "\nCantidad a convertir: [" + originCurrency.getCode() + "] $" + amountToConvert +
+                "\nCantidad convertida: [" + targetCurrency.getCode() + "] $" + amountConverted +
+                "\nTasa de conversion: " + conversionRate +
+                "\nFecha de conversion: " + conversionDate +
+                "\nHora de conversion: " + conversionTime;
     }
 }

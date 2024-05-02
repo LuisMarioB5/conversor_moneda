@@ -1,17 +1,18 @@
 package com.conversor_moneda.ui.menus;
 
 import com.conversor_moneda.logic.api.Api;
+import com.conversor_moneda.logic.console.Console;
 import com.conversor_moneda.logic.currency_converter.Converter;
 import com.conversor_moneda.logic.error.MyError;
 
 import java.util.Scanner;
 
-public class Convertir {
+public class MenuConvertir {
 
     /**
      * Presenta el menú para realizar una conversión de divisa.
      */
-    public static void menuConvertir() {
+    public static void show() {
         Scanner scanner = new Scanner(System.in);
         System.out.println();
 
@@ -22,17 +23,15 @@ public class Convertir {
         String codeTo = getCurrencyCode(scanner, "Ingresa el código de la divisa que deseeas obtener: ");
 
         // Obtener la cantidad a convertir
-        float amount = getAmountToConvert(scanner, "Ingresa la cantidad que deseas convertir de " + codeFrom + " a " + codeTo + ": ");
+        float amount = getAmountToConvert(scanner, "Ingresa la cantidad que deseas convertir: [" + codeFrom + "] $");
 
         // Realizar la conversión
         float conversion = Converter.convert(codeFrom, codeTo, amount);
 
-        // Mostrar los detalles de la conversión
-        System.out.println("\nResultado de la conversión:");
-        System.out.println("Divisa origen: " + codeFrom);
-        System.out.println("Divisa objetivo: " + codeTo);
-        System.out.println("Cantidad a convertir: [" + codeFrom + "] $" + amount);
-        System.out.println("Cantidad convertida: [" + codeTo + "] $" + conversion);
+        // Mostrar el valor convertido
+        System.out.println("Cantidad convertida: [" + codeTo + "] $" + conversion + '\n');
+//        System.out.println();
+        Console.pause();
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.conversor_moneda.ui.menus;
 
 import com.conversor_moneda.logic.console.Console;
+import com.conversor_moneda.logic.error.MyError;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -44,11 +45,12 @@ public class ListasDivisas {
                     break;
 
                 case 4:
-                    System.out.println("\nVolviendo al menú anterior...");
+                    System.out.println("Volviendo al menú anterior...\n");
+                    Console.pause();
                     return;
 
                 default:
-                    System.out.println("\nOpción incorrecta, vuelva a intentar...");
+                    MyError.println("\nOpción incorrecta, vuelva a intentar...");
                     Console.pause();
                     break;
             }

@@ -1,8 +1,9 @@
 package com.conversor_moneda.ui;
 
 import com.conversor_moneda.logic.console.Console;
-import com.conversor_moneda.ui.menus.Convertir;
+import com.conversor_moneda.ui.menus.Historial;
 import com.conversor_moneda.ui.menus.ListasDivisas;
+import com.conversor_moneda.ui.menus.MenuConvertir;
 
 import java.util.Scanner;
 
@@ -28,7 +29,7 @@ public class Main {
                1. Consultar la lista de divisas
                2. Convertir divisa
                3. Consultar conversiones anteriores
-               4. Salir del programa
+               4. Salir de la aplicación
                """;
 
         short opcionElegida = 0;
@@ -49,22 +50,18 @@ public class Main {
             switch (opcionElegida) {
                 case 1:
                     ListasDivisas.show();
-                    Console.pause();
                     break;
 
                 case 2:
-                    Convertir.menuConvertir();
-                    Console.pause();
+                    MenuConvertir.show();
                     break;
 
                 case 3:
-                    System.out.println("Consultando las conversiones anteriores...");
-                    Console.pause();
+                    Historial.show();
                     break;
 
                 case 4:
-                    System.out.println("\nSaliendo del conversor...");
-                    return;
+                    exitApp(0);
 
                 default:
                     System.out.println("\nOpción incorrecta, vuelva a intentar...");
@@ -74,8 +71,28 @@ public class Main {
         }
     }
 
+    /**
+     * Termina la ejecución de la aplicación y sale del programa.
+     * Muestra un mensaje indicando que la aplicación está saliendo.
+     * @param status El código de estado que indica si la finalización es normal (0) o si hay un error (!= 0).
+     */
+    public static void exitApp(int status) {
+        System.out.println("Saliendo de la aplicación...");
+        System.exit(status);
+    }
+
+
+
     public static void main(String[] args) {
         // Llama al método para mostrar la interfaz de usuario
         showUi();
+
+        // TODO
+        //  CREAR EL MENU PARA MOSTRAR LAS CONVERSIONES ANTERIORES Y EN ESTA SE DEBE TENER LA OPCION DE GUARDAR COMO UN ARCHIVO JSON O TXT
+        //  de entrada mostrar el historial que esta guardado en la lista "conversionHistory" y luego un mini-menu con las opciones de
+        //  guardar como un archivo(1. txt, 2. json) y volver al menu anterior.
+
+        // OTHER TODO
+        //          MODIFICAR LOS MENUS PARA QUE EN CASO DE SER NECESARIO SE COLOQUE UN exitApp(0); para cerrar la app
     }
 }
