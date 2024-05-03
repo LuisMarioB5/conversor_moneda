@@ -2,12 +2,15 @@ package com.conversor_moneda.ui.menus;
 
 import com.conversor_moneda.logic.console.Console;
 import com.conversor_moneda.logic.error.MyError;
+import com.conversor_moneda.ui.Main;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
 import java.util.Scanner;
 
 public class ListasDivisas {
@@ -20,6 +23,7 @@ public class ListasDivisas {
               2. Consultar monedas con alta volatibilidad
               3. Consultar monedas disponibles
               4. Volver al menú anterior
+              5. Salir de la aplicación
               """;
         short opcionElegida;
         Scanner scanner = new Scanner(System.in);
@@ -47,6 +51,10 @@ public class ListasDivisas {
                 case 4:
                     System.out.println("Volviendo al menú anterior...\n");
                     Console.pause();
+                    return;
+
+                case 5:
+                    Main.exitApp(0);
                     return;
 
                 default:

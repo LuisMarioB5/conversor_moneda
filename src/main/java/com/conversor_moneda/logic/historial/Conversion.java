@@ -1,6 +1,7 @@
 package com.conversor_moneda.logic.historial;
 
 import com.conversor_moneda.logic.currency_converter.Currency;
+import com.google.gson.annotations.SerializedName;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,12 +10,25 @@ import java.time.LocalTime;
  * Representa una conversión de divisa realizada en un momento específico.
  */
 public class Conversion {
+    @SerializedName("Moneda de origen")
     private final Currency originCurrency; // Divisa de origen
+
+    @SerializedName("Moneda objetivo")
     private final Currency targetCurrency; // Divisa objetivo
+
+    @SerializedName("Cantidad a convertir")
     private final float amountToConvert;   // Cantidad de divisa a convertir
+
+    @SerializedName("Cantidad convertida")
     private final float amountConverted;   // Cantidad de divisa convertida
+
+    @SerializedName("Tasa de conversion")
     private final float conversionRate;    // Tasa de conversión
+
+    @SerializedName("Fecha de conversion")
     private final LocalDate conversionDate;// Fecha de la conversión
+
+    @SerializedName("Hora de conversion")
     private final LocalTime conversionTime;// Hora de la conversión
 
     /**

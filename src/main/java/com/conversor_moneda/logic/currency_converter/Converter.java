@@ -84,7 +84,6 @@ public class Converter {
         return !conversionHistory.isEmpty();
     }
 
-
     public static void main(String[] args) {
         System.out.println(getConversionHistory());
 

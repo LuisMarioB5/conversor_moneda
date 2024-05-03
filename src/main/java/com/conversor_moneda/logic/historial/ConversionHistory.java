@@ -24,7 +24,6 @@ public class ConversionHistory {
         return conversionList;
     }
 
-
     /**
      * Agrega una nueva conversión al historial, si aún no está presente.
      * @param conversion La conversión a agregar.
@@ -52,7 +51,7 @@ public class ConversionHistory {
         StringBuilder stringBuilder = new StringBuilder();
         short num = 1;
         for (Conversion conversion : this.getConversionList()) {
-            stringBuilder.append('\n').append(num).append(". \n").append(conversion).append('\n');
+            stringBuilder.append('\n').append(num).append(": \n").append(conversion).append('\n');
             num++;
         }
         return stringBuilder.toString();

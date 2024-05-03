@@ -3,16 +3,9 @@ package com.conversor_moneda.ui.menus;
 import com.conversor_moneda.logic.console.Console;
 import com.conversor_moneda.logic.currency_converter.Converter;
 import com.conversor_moneda.logic.error.MyError;
-import com.conversor_moneda.logic.historial.Conversion;
-
+import com.conversor_moneda.logic.file.File;
 import com.conversor_moneda.ui.Main;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.List;
 import java.util.Scanner;
 
 public class Historial {
@@ -43,6 +36,7 @@ public class Historial {
                Selecciona la opción que desees:
                1. Guardar el historial en un archivo (txt, json)
                2. Volver al menú anterior
+               3. Salir de la aplicación
                """;
 
         while (true) {
@@ -55,7 +49,12 @@ public class Historial {
                     break;
 
                 case 2:
-                    System.out.println("\nVolviendo al menú anterior...");
+                    System.out.println("Volviendo al menú anterior...\n");
+                    Console.pause();
+                    return;
+
+                case 3:
+                    Main.exitApp(0);
                     return;
 
                 default:
@@ -90,12 +89,14 @@ public class Historial {
             // Realizar acciones según la opción elegida
             switch (opcionElegida) {
                 case 1:
-                    writeToTextFile(Converter.getConversionHistory().getConversionList());
+                    File.saveAsTextFile(Converter.getConversionHistory().getConversionList(), "src/main/resources/user_resources/historialConversiones.txt");
+                    saveAgain(".txt");
                     showReturnOrExitMenu();
                     break;
 
                 case 2:
-                    writeToJsonFile(Converter.getConversionHistory().getConversionList());
+                    File.saveASJsonFile(Converter.getConversionHistory().getConversionList(), "src/main/resources/user_resources/historialConversiones.json");
+                    saveAgain(".json");
                     showReturnOrExitMenu();
                     break;
 
@@ -106,6 +107,7 @@ public class Historial {
 
                 case 4:
                     Main.exitApp(0);
+                    return;
 
                 default:
                     MyError.println("\nOpción incorrecta, vuelva a intentar...");
@@ -115,37 +117,60 @@ public class Historial {
         }
     }
 
-    private static void writeToTextFile(List<Conversion> conversionHistory) {
-        String filePath = "src/main/resources/user_resources/historialConversiones.txt";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            int transactionNumber = 1;
-            for (Conversion conversion : conversionHistory) {
-                writer.write("Transacción " + transactionNumber + ":\n");
-                writer.write("Moneda de origen: " + conversion.getOriginCurrency().getCode() + "\n");
-                writer.write("Moneda objetivo: " + conversion.getTargetCurrency().getCode() + "\n");
-                writer.write("Cantidad a convertir: [" + conversion.getOriginCurrency().getCode() + "] $" + conversion.getAmountToConvert() + "\n");
-                writer.write("Cantidad convertida: [" + conversion.getTargetCurrency().getCode() + "] $" + conversion.getAmountConverted() + "\n");
-                writer.write("Tasa de conversión: " + conversion.getConversionRate() + "\n");
-                writer.write("Fecha de conversión: " + conversion.getConversionDate() + "\n");
-                writer.write("Hora de conversión: " + conversion.getConversionTime() + "\n\n");
-                transactionNumber++;
+    private static void saveAgain(String extension) {
+
+        if (extension.equals(".txt") || extension.equals(".json")) {
+            Scanner scanner = new Scanner(System.in);
+
+            while (true) {
+                // Mostrar el menú inicial
+                System.out.print("\nDeseas guardar el archivo en un lugar distinto? [S/N]: ");
+
+                // Leer la opción elegida por el usuario
+                String opcionElegida = scanner.nextLine().toUpperCase();
+
+                if (opcionElegida.startsWith("S")) {
+                    opcionElegida = "S";
+                } else if (opcionElegida.startsWith("N")) {
+                    opcionElegida = "N";
+                }
+
+                // Realizar acciones según la opción elegida
+                switch (opcionElegida) {
+                    case "S":
+                        System.out.println("\nDebes ingresar el directorio o ruta del archivo, como en los ejemplos siguientes:");
+                        System.out.printf("Ejemplo 1 (ruta absoluta): C:\\Users\\UserX\\Desktop\\nombreDelArchivo%s\n", extension);
+                        System.out.printf("Ejemplo 2 (ruta con relación al proyecto): direccionDelProyecto\\nombreDelArchivo%s\n\n", extension);
+
+                        System.out.print("Ingresa el directorio o ruta del archivo aquí: ");
+                        String newFilePath = scanner.nextLine();
+
+                        if (extension.equals(".txt")) {
+                            File.saveAsTextFile(Converter.getConversionHistory().getConversionList(), newFilePath);
+                        }
+
+                        if (extension.equals(".json")) {
+                            File.saveASJsonFile(Converter.getConversionHistory().getConversionList(), newFilePath);
+                        }
+
+                        System.out.println();
+                        Console.pause();
+                        break;
+
+                    case "N":
+                        System.out.println("\nMostrando el siguiente menú...");
+                        return;
+
+                    default:
+                        MyError.println("\nOpción incorrecta, vuelva a intentar...");
+                        Console.pause();
+                        break;
+                }
             }
-            System.out.println("Archivo guardado exitosamente en la ruta: " + filePath);
-        } catch (IOException e) {
-            MyError.println(e.getMessage());
-        }
-    }
-
-    // TODO REVISAR PARA QUE FUNCIONE BIEN, SIGUE DANDO ERROR, NO PERMITE ESCRIBIR EL ARCHIVO
-    private static void writeToJsonFile(List<Conversion> conversionHistory) {
-        String filePath = "src/main/resources/user_resources/historialConversiones.json";
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-        try (FileWriter fileWriter = new FileWriter(filePath)) {
-            gson.toJson(conversionHistory, fileWriter);
-            System.out.println("Archivo guardado exitosamente en la ruta: " + filePath);
-        } catch (IOException e) {
-            MyError.println(e.getMessage());
+        } else {
+            MyError.println("Error: No se soporta la extexsión \"" + extension + '"');
+            MyError.println("Intenta nuevamente con \".txt\" o \".json\"...\n");
+            Console.pause();
         }
     }
 
@@ -170,6 +195,8 @@ public class Historial {
         // Realizar acciones según la opción elegida
         switch (opcionElegida) {
             case 1:
+                System.out.println("Volviendo al menú anterior...\n");
+                Console.pause();
                 return;
 
             case 2:
@@ -185,6 +212,8 @@ public class Historial {
     public static void main(String[] args) {
         Converter.convert("usd", "dop", 50);
         Converter.convert("usd", "cop", 50);
+        Converter.convert("dop", "cop", 50);
         Historial.show();
+
     }
 }

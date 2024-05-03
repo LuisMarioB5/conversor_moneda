@@ -62,6 +62,7 @@ public class Main {
 
                 case 4:
                     exitApp(0);
+                    return;
 
                 default:
                     System.out.println("\nOpción incorrecta, vuelva a intentar...");
@@ -81,18 +82,8 @@ public class Main {
         System.exit(status);
     }
 
-
-
     public static void main(String[] args) {
         // Llama al método para mostrar la interfaz de usuario
         showUi();
-
-        // TODO
-        //  CREAR EL MENU PARA MOSTRAR LAS CONVERSIONES ANTERIORES Y EN ESTA SE DEBE TENER LA OPCION DE GUARDAR COMO UN ARCHIVO JSON O TXT
-        //  de entrada mostrar el historial que esta guardado en la lista "conversionHistory" y luego un mini-menu con las opciones de
-        //  guardar como un archivo(1. txt, 2. json) y volver al menu anterior.
-
-        // OTHER TODO
-        //          MODIFICAR LOS MENUS PARA QUE EN CASO DE SER NECESARIO SE COLOQUE UN exitApp(0); para cerrar la app
     }
 }
