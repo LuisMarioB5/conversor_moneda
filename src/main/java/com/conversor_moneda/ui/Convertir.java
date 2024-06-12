@@ -1,26 +1,31 @@
-package com.conversor_moneda.ui.menus;
+package com.conversor_moneda.ui;
 
-import com.conversor_moneda.logic.api.Api;
-import com.conversor_moneda.logic.console.Console;
-import com.conversor_moneda.logic.currency_converter.Converter;
-import com.conversor_moneda.logic.error.MyError;
+import com.conversor_moneda.api.Api;
+import com.conversor_moneda.console.Console;
+import com.conversor_moneda.converter.Converter;
+import com.conversor_moneda.error.MyError;
 
 import java.util.Scanner;
 
-public class MenuConvertir {
+/**
+ * Clase que proporciona un menú para realizar conversiones de monedas.
+ */
+public class Convertir {
 
     /**
-     * Presenta el menú para realizar una conversión de divisa.
+     * Presenta el menú para realizar una conversión de moneda.
+     * Solicita al usuario los códigos de las monedas de origen y destino, así como la cantidad a convertir.
+     * Realiza la conversión y muestra el resultado.
      */
     public static void show() {
         Scanner scanner = new Scanner(System.in);
         System.out.println();
 
-        // Obtener el código de la divisa de origen
-        String codeFrom = getCurrencyCode(scanner, "Ingresa el código de la divisa que deseeas cambiar: ");
+        // Obtener el código de la moneda de origen
+        String codeFrom = getCurrencyCode(scanner, "Ingresa el código de la moneda que deseas cambiar: ");
 
-        // Obtener el código de la divisa de destino
-        String codeTo = getCurrencyCode(scanner, "Ingresa el código de la divisa que deseeas obtener: ");
+        // Obtener el código de la moneda de destino
+        String codeTo = getCurrencyCode(scanner, "Ingresa el código de la moneda que deseas obtener: ");
 
         // Obtener la cantidad a convertir
         float amount = getAmountToConvert(scanner, "Ingresa la cantidad que deseas convertir: [" + codeFrom + "] $");
@@ -30,16 +35,15 @@ public class MenuConvertir {
 
         // Mostrar el valor convertido
         System.out.println("Cantidad convertida: [" + codeTo + "] $" + conversion + '\n');
-//        System.out.println();
         Console.pause();
     }
 
     /**
-     * Solicita al usuario que ingrese un código de divisa y lo valida.
+     * Solicita al usuario que ingrese un código de moneda y lo válida.
      *
      * @param scanner El scanner para leer la entrada del usuario.
      * @param message El mensaje que indica al usuario qué ingresar.
-     * @return El código de la divisa ingresado por el usuario.
+     * @return El código de la moneda ingresado por el usuario.
      */
     private static String getCurrencyCode(Scanner scanner, String message) {
         String code;
@@ -54,15 +58,14 @@ public class MenuConvertir {
                 continue;
             }
 
-            Api api = new Api();
-            if (api.currencyCodeExits(code)) break;
+            if (Api.currencyCodeExists(code)) break;
         }
 
         return code;
     }
 
     /**
-     * Solicita al usuario que ingrese una cantidad a convertir y la valida.
+     * Solicita al usuario que ingrese una cantidad a convertir y la válida.
      *
      * @param scanner El scanner para leer la entrada del usuario.
      * @param message El mensaje que indica al usuario qué ingresar.
@@ -77,6 +80,7 @@ public class MenuConvertir {
             // Verifica si el próximo token del scanner es un float
             if (scanner.hasNextFloat()) {
                 amount = scanner.nextFloat();
+                scanner.nextLine();
                 break;
             } else {
                 // Si no es un float, muestra un mensaje de error y consume el token no válido
@@ -87,5 +91,4 @@ public class MenuConvertir {
 
         return amount;
     }
-
 }

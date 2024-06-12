@@ -1,22 +1,24 @@
-package com.conversor_moneda.logic.currency_converter;
+package com.conversor_moneda.converter;
 
-import com.conversor_moneda.logic.error.MyError;
-import com.conversor_moneda.logic.historial.Conversion;
-import com.conversor_moneda.logic.historial.ConversionHistory;
+import com.conversor_moneda.currency.Currency;
+import com.conversor_moneda.currency.CurrencyList;
+import com.conversor_moneda.error.MyError;
+import com.conversor_moneda.conversion.Conversion;
+import com.conversor_moneda.conversion.ConversionHistory;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 /**
- * La clase Converter proporciona métodos para convertir una cantidad de una moneda a otra.
+ * La clase Converter proporciona métodos para convertir una cantidad de una moneda ({@link Currency}) a otra.
  */
 public class Converter {
-
+    // Instancia de CurrencyList y ConversionHistory
     private static final CurrencyList currencyList = new CurrencyList();
     private static final ConversionHistory conversionHistory = new ConversionHistory();
 
     /**
-     * Convierte una cantidad de una moneda a otra.
+     * Convierte una cantidad de una moneda ({@link Currency}) a otra.
      *
      * @param codeFrom  Código de la moneda (String) de origen.
      * @param codeTo    Código de la moneda (String) de destino.
@@ -24,9 +26,11 @@ public class Converter {
      * @return La cantidad convertida en float.
      */
     public static float convert(String codeFrom, String codeTo, float amount) {
+        // Código convertido a mayúsculas
         codeFrom = codeFrom.toUpperCase();
         codeTo = codeTo.toUpperCase();
 
+        // Creación de instancias Currency y adición a la lista de monedas
         Currency from = new Currency(codeFrom);
         currencyList.add(from);
 
@@ -40,20 +44,18 @@ public class Converter {
         Currency to = new Currency(codeTo);
         currencyList.add(to);
 
-
-        // Se convierte la cantidad a dólares
+        /// Conversión a dólares y luego a la moneda de destino
         float amountInUSD = amount / from.getRateToUSD();
-
-        // Se convierte la cantidad de dólares a la moneda de destino
         float amountConverted = amountInUSD * to.getRateToUSD();
 
+        // Registro de la conversión en el conversion
         Conversion conversion = new Conversion(from, to, amount, amountConverted, getExchangeRate(from, to), LocalDate.now(), LocalTime.now());
         conversionHistory.add(conversion);
         return amountConverted;
     }
 
     /**
-     * Obtiene la tasa de cambio entre dos monedas.
+     * Obtiene la tasa de cambio entre dos monedas ({@link Currency}).
      *
      * @param from  Moneda de origen.
      * @param to    Moneda de destino.
@@ -67,6 +69,11 @@ public class Converter {
         return amountInUSD * to.getRateToUSD();
     }
 
+    /**
+     * Obtiene el conversion de conversiones ({@link ConversionHistory}).
+     *
+     * @return El conversion de conversiones.
+     */
     public static ConversionHistory getConversionHistory() {
         if (conversionHistory.isEmpty()) {
             MyError.println("Error: No se ha realizado ninguna conversion, realice al menos una y vuelva a intentar...\n");
@@ -76,32 +83,11 @@ public class Converter {
     }
 
     /**
-     * Verifica si hay conversiones en el historial.
+     * Verifica si hay conversiones en el conversion.
      *
-     * @return true si hay conversiones en el historial, false si está vacío.
+     * @return true si hay conversiones en el conversion, false si está vacío.
      */
     public static boolean hasConversionHistory() {
         return !conversionHistory.isEmpty();
-    }
-
-    public static void main(String[] args) {
-        System.out.println(getConversionHistory());
-
-
-        // Ejemplos de uso
-        System.out.println(Converter.convert("mxn", "dop", 10));
-        System.out.println(Converter.convert("usd", "dop", 10));
-        System.out.println(Converter.convert("usd", "usd", 10));
-        System.out.println(Converter.convert("dop", "dop", 10));
-        System.out.println();
-
-        // Imprimir estado de la lista de monedas y del historial de conversiones
-        System.out.println("currencyList:");
-        System.out.println(currencyList);
-
-        System.out.println("conversionHistory:");
-        System.out.println(conversionHistory);
-
-        System.out.println("Terminado");
     }
 }

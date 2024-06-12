@@ -1,15 +1,21 @@
-package com.conversor_moneda.ui.menus;
+package com.conversor_moneda.ui;
 
-import com.conversor_moneda.logic.console.Console;
-import com.conversor_moneda.logic.currency_converter.Converter;
-import com.conversor_moneda.logic.error.MyError;
-import com.conversor_moneda.logic.file.File;
-import com.conversor_moneda.ui.Main;
+import com.conversor_moneda.console.Console;
+import com.conversor_moneda.converter.Converter;
+import com.conversor_moneda.error.MyError;
+import com.conversor_moneda.file.MyFile;
 
 import java.util.Scanner;
 
+/**
+ * Clase que proporciona un menú para mostrar y guardar la lista de conversiones.
+ */
 public class Historial {
 
+    /**
+     * Muestra la lista de conversiones y ofrece opciones para guardar las conversiones realizadas o volver al menú anterior.
+     * Si no hay conversiones en la lista, muestra un mensaje de error.
+     */
     public static void show() {
         String message = """
                 
@@ -25,25 +31,30 @@ public class Historial {
             System.out.println(Converter.getConversionHistory());
             showSaveMenu();
         } else {
-            MyError.println("No hay conversiones disponibles en el historial.");
-            MyError.println("Realiza alguna y vuelve a intertar...\n");
+            MyError.println("No haz realizado ninguna conversión.");
+            MyError.println("Realiza alguna y vuelve a intentar...");
         }
     }
 
+    /**
+     * Muestra un menú para guardar la lista de conversiones en un archivo, volver al menú anterior o salir de la aplicación.
+     * Se repite hasta que el usuario elija volver o salir.
+     */
     private static void showSaveMenu() {
         Scanner scanner = new Scanner(System.in);
         String menuInicial = """
                Selecciona la opción que desees:
-               1. Guardar el historial en un archivo (txt, json)
+               1. Guardar las conversiones en un archivo (txt, json)
                2. Volver al menú anterior
                3. Salir de la aplicación
                """;
 
         while (true) {
             System.out.print(menuInicial + "\nOpción: ");
-            short opcion = scanner.nextShort();
+            short option = scanner.nextShort();
+            scanner.nextLine();
 
-            switch (opcion) {
+            switch (option) {
                 case 1:
                     saveHistoryToFile();
                     break;
@@ -65,10 +76,12 @@ public class Historial {
         }
     }
 
+    /**
+     * Muestra un menú para elegir el formato en el que se desea guardar la lista de conversiones (texto o JSON).
+     * También permite volver al menú anterior o salir de la aplicación.
+     */
     private static void saveHistoryToFile() {
-        // Menú inicial
         String menuInicial = """
-
                Selecciona la opción que desees:
                1. Guardar como un archivo de texto (.txt)
                2. Guardar como un archivo JSON (.json)
@@ -76,33 +89,32 @@ public class Historial {
                4. Salir de la aplicación
                """;
 
-        short opcionElegida = 0;
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            // Mostrar el menú inicial
             System.out.print(menuInicial + "\nOpción: ");
+            short selectedOption = scanner.nextShort();
+            scanner.nextLine();
 
-            // Leer la opción elegida por el usuario
-            opcionElegida = scanner.nextShort();
-
-            // Realizar acciones según la opción elegida
-            switch (opcionElegida) {
+            switch (selectedOption) {
                 case 1:
-                    File.saveAsTextFile(Converter.getConversionHistory().getConversionList(), "src/main/resources/user_resources/historialConversiones.txt");
+                    System.out.print("\nEscribe el nombre del archivo: ");
+                    String textFileName = scanner.nextLine();
+                    MyFile.saveAsTextFile(Converter.getConversionHistory().getConversionList(), MyFile.checkExtension("src/main/resources/user/" + textFileName, ".txt"));
                     saveAgain(".txt");
-                    showReturnOrExitMenu();
                     break;
 
                 case 2:
-                    File.saveASJsonFile(Converter.getConversionHistory().getConversionList(), "src/main/resources/user_resources/historialConversiones.json");
+                    System.out.print("\nEscribe el nombre del archivo: ");
+                    String jsonFileName = scanner.nextLine();
+                    MyFile.saveAsJsonFile(Converter.getConversionHistory().getConversionList(), MyFile.checkExtension("src/main/resources/user/" + jsonFileName, ".json"));
                     saveAgain(".json");
-                    showReturnOrExitMenu();
                     break;
 
                 case 3:
                     System.out.println("Volviendo al menú anterior...\n");
                     Console.pause();
+                    System.out.println();
                     return;
 
                 case 4:
@@ -117,40 +129,39 @@ public class Historial {
         }
     }
 
+    /**
+     * Pregunta al usuario si desea guardar el archivo en un lugar distinto.
+     * Si el usuario elige "Sí", se le solicita la nueva ruta para guardar el archivo.
+     *
+     * @param extension La extensión del archivo a guardar (.txt o .json).
+     */
     private static void saveAgain(String extension) {
-
         if (extension.equals(".txt") || extension.equals(".json")) {
             Scanner scanner = new Scanner(System.in);
 
             while (true) {
-                // Mostrar el menú inicial
                 System.out.print("\nDeseas guardar el archivo en un lugar distinto? [S/N]: ");
+                String selectedOption = scanner.nextLine().toUpperCase();
 
-                // Leer la opción elegida por el usuario
-                String opcionElegida = scanner.nextLine().toUpperCase();
-
-                if (opcionElegida.startsWith("S")) {
-                    opcionElegida = "S";
-                } else if (opcionElegida.startsWith("N")) {
-                    opcionElegida = "N";
+                if (selectedOption.startsWith("S")) {
+                    selectedOption = "S";
+                } else if (selectedOption.startsWith("N")) {
+                    selectedOption = "N";
                 }
 
-                // Realizar acciones según la opción elegida
-                switch (opcionElegida) {
+                switch (selectedOption) {
                     case "S":
                         System.out.println("\nDebes ingresar el directorio o ruta del archivo, como en los ejemplos siguientes:");
-                        System.out.printf("Ejemplo 1 (ruta absoluta): C:\\Users\\UserX\\Desktop\\nombreDelArchivo%s\n", extension);
-                        System.out.printf("Ejemplo 2 (ruta con relación al proyecto): direccionDelProyecto\\nombreDelArchivo%s\n\n", extension);
+                        System.out.println("Ejemplo 1 (ruta absoluta en Windows): C:\\Users\\UserX\\Desktop\\nombreDelArchivo");
+                        System.out.println("Ejemplo 2 (ruta con relación al proyecto): ruta/del/archivo/con/relación/al/proyecto/nombreDelArchivo\n");
 
                         System.out.print("Ingresa el directorio o ruta del archivo aquí: ");
                         String newFilePath = scanner.nextLine();
 
                         if (extension.equals(".txt")) {
-                            File.saveAsTextFile(Converter.getConversionHistory().getConversionList(), newFilePath);
-                        }
-
-                        if (extension.equals(".json")) {
-                            File.saveASJsonFile(Converter.getConversionHistory().getConversionList(), newFilePath);
+                            MyFile.saveAsTextFile(Converter.getConversionHistory().getConversionList(), newFilePath);
+                        } else {
+                            MyFile.saveAsJsonFile(Converter.getConversionHistory().getConversionList(), newFilePath);
                         }
 
                         System.out.println();
@@ -158,7 +169,7 @@ public class Historial {
                         break;
 
                     case "N":
-                        System.out.println("\nMostrando el siguiente menú...");
+                        System.out.println("\nVolviendo al menú anterior...\n");
                         return;
 
                     default:
@@ -168,52 +179,9 @@ public class Historial {
                 }
             }
         } else {
-            MyError.println("Error: No se soporta la extexsión \"" + extension + '"');
+            MyError.println("Error: No se soporta la extensión \"" + extension + '"');
             MyError.println("Intenta nuevamente con \".txt\" o \".json\"...\n");
             Console.pause();
         }
-    }
-
-    private static void showReturnOrExitMenu() {
-        // Menú inicial
-        String menuInicial = """
-
-               Selecciona la opción que desees:
-               1. Volver al menú anterior
-               2. Salir de la aplicación
-               """;
-
-        short opcionElegida = 0;
-        Scanner scanner = new Scanner(System.in);
-
-        // Mostrar el menú inicial
-        System.out.print(menuInicial + "\nOpción: ");
-
-        // Leer la opción elegida por el usuario
-        opcionElegida = scanner.nextShort();
-
-        // Realizar acciones según la opción elegida
-        switch (opcionElegida) {
-            case 1:
-                System.out.println("Volviendo al menú anterior...\n");
-                Console.pause();
-                return;
-
-            case 2:
-                Main.exitApp(0);
-
-            default:
-                MyError.println("\nOpción incorrecta, vuelva a intentar...");
-                Console.pause();
-                break;
-        }
-    }
-
-    public static void main(String[] args) {
-        Converter.convert("usd", "dop", 50);
-        Converter.convert("usd", "cop", 50);
-        Converter.convert("dop", "cop", 50);
-        Historial.show();
-
     }
 }

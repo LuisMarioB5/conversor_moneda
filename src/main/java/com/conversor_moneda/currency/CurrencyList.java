@@ -1,36 +1,36 @@
-package com.conversor_moneda.logic.currency_converter;
+package com.conversor_moneda.currency;
 
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Representa una lista de divisas únicas.
+ * Representa una lista de monedas únicas.
  */
 public class CurrencyList {
-    // Lista que almacena las divisas únicas
+    // Lista que almacena las monedas únicas
     private final List<Currency> currencyList;
 
     /**
      * Constructor de la clase CurrencyList.
-     * Inicializa la lista de divisas como una LinkedList vacía.
+     * Inicializa la lista de monedas como una LinkedList vacía.
      */
     public CurrencyList() {
         this.currencyList = new LinkedList<>();
     }
 
     /**
-     * Obtiene la lista de divisas.
+     * Obtiene la lista de monedas.
      *
-     * @return La lista de divisas.
+     * @return La lista de monedas.
      */
     public List<Currency> getCurrencyList() {
         return currencyList;
     }
 
     /**
-     * Agrega una divisa a la lista si no está presente.
+     * Agrega una moneda a la lista si no está presente.
      *
-     * @param currency La divisa que se va a agregar.
+     * @param currency La moneda que se va a agregar.
      */
     public void add(Currency currency) {
         if (!(this.currencyList.contains(currency))) {
@@ -39,10 +39,10 @@ public class CurrencyList {
     }
 
     /**
-     * Retorna una representación en cadena de la lista de divisas.
-     * Cada divisa se imprime en una línea separada.
+     * Retorna una representación en cadena de la lista de monedas.
+     * Cada moneda se imprime en una línea separada.
      *
-     * @return Una representación en cadena de la lista de divisas.
+     * @return Una representación en cadena de la lista de monedas.
      */
     @Override
     public String toString() {

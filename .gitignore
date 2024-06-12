@@ -32,3 +32,6 @@ bin/
 .idea/
 target/
 *.iml
+src/main/resources/user
+src/main/resources/conversion_rates.json
+src/main/resources/last_api_request_time.properties

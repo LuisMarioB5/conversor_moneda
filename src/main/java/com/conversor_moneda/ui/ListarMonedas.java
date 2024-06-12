@@ -1,38 +1,45 @@
-package com.conversor_moneda.ui.menus;
+package com.conversor_moneda.ui;
 
-import com.conversor_moneda.logic.console.Console;
-import com.conversor_moneda.logic.error.MyError;
-import com.conversor_moneda.ui.Main;
-
+import com.conversor_moneda.console.Console;
+import com.conversor_moneda.error.MyError;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-public class ListasDivisas {
+/**
+ * Clase que proporciona menús para consultar diferentes listas de monedas.
+ */
+public class ListarMonedas {
 
+    /**
+     * Muestra el menú principal para consultar las listas de monedas.
+     * Permite al usuario seleccionar entre diferentes opciones para consultar las listas de monedas no disponibles,
+     * con alta volatilidad, disponibles, volver al menú anterior o salir de la aplicación.
+     */
     public static void show() {
         String menuInicial = """
               
               Selecciona la opción que desees:
               1. Consultar monedas no disponibles
-              2. Consultar monedas con alta volatibilidad
+              2. Consultar monedas con alta volatilidad
               3. Consultar monedas disponibles
               4. Volver al menú anterior
               5. Salir de la aplicación
               """;
-        short opcionElegida;
+        short option;
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
             System.out.print(menuInicial + "\nOpción: ");
-            opcionElegida = scanner.nextShort();
+            option = scanner.nextShort();
+            scanner.nextLine();
 
-            switch (opcionElegida) {
+            switch (option) {
                 case 1:
                     showNotSupportedCurrenciesList();
                     Console.pause();
@@ -65,12 +72,16 @@ public class ListasDivisas {
         }
     }
 
+    /**
+     * Muestra la lista de monedas no soportadas.
+     * Lee los datos del archivo JSON correspondiente y los imprime en formato de tabla.
+     */
     public static void showNotSupportedCurrenciesList() {
         short maxSpace = 45;
         String hashtag = "#";
         String emptySpace = " ";
         String notSupportedTitle = "Moneda que no se ofrecen tasa de cambio";
-        String notSupportedTitleSpaces = emptySpace.repeat((maxSpace - notSupportedTitle.length()) / 2 );
+        String notSupportedTitleSpaces = emptySpace.repeat((maxSpace - notSupportedTitle.length()) / 2);
 
         System.out.println();
         System.out.println(hashtag.repeat(maxSpace));
@@ -90,12 +101,16 @@ public class ListasDivisas {
         System.out.println();
     }
 
+    /**
+     * Muestra la lista de monedas con alta volatilidad.
+     * Lee los datos del archivo JSON correspondiente y los imprime en formato de tabla.
+     */
     public static void showHighVolatilityCurrenciesList() {
         short maxSpace = 56;
         String hashtag = "#";
         String emptySpace = " ";
-        String notSupportedTitle = "Lista de moneda con alta volativilidad para converir";
-        String notSupportedTitleSpaces = emptySpace.repeat((maxSpace - notSupportedTitle.length()) / 2 );
+        String notSupportedTitle = "Lista de moneda con alta volatilidad para convertir";
+        String notSupportedTitleSpaces = emptySpace.repeat((maxSpace - notSupportedTitle.length()) / 2);
 
         System.out.println();
         System.out.println(hashtag.repeat(maxSpace));
@@ -121,12 +136,16 @@ public class ListasDivisas {
         System.out.println();
     }
 
+    /**
+     * Muestra la lista de monedas soportadas.
+     * Lee los datos del archivo JSON correspondiente y los imprime en formato de tabla.
+     */
     public static void showSupportedCurrenciesList() {
         short maxSpace = 95;
         String hashtag = "#";
         String emptySpace = " ";
-        String notSupportedTitle = "Lista de moneda disponibles para converir";
-        String notSupportedTitleSpaces = emptySpace.repeat((maxSpace - notSupportedTitle.length()) / 2 );
+        String notSupportedTitle = "Lista de moneda disponibles para convertir";
+        String notSupportedTitleSpaces = emptySpace.repeat((maxSpace - notSupportedTitle.length()) / 2);
 
         System.out.println();
         System.out.println(hashtag.repeat(maxSpace));
@@ -138,7 +157,7 @@ public class ListasDivisas {
 
         System.out.println("""
               La app tiene disponible para convertir las 161 monedas mundiales que circulan habitualmente y
-                 que se enumeran a continuación. Estos cubren el 99% de todos los estados y territorios
+                 que se enumeran a continuación. Estas cubren el 99% de todos los estados y territorios
                                                reconocidos por la ONU.
               """);
 
@@ -146,6 +165,11 @@ public class ListasDivisas {
         System.out.println();
     }
 
+    /**
+     * Imprime una tabla de monedas a partir de un archivo JSON.
+     *
+     * @param fileName El nombre del archivo JSON que contiene los datos de las monedas.
+     */
     public static void printCurrencyTable(String fileName) {
         fileName = fileName.toLowerCase();
         String filePath = "";
@@ -167,7 +191,7 @@ public class ListasDivisas {
 
         try {
             // Lee el archivo JSON
-            JsonObject jsonObject = new Gson().fromJson(new FileReader(filePath), JsonObject.class);
+            JsonObject jsonObject = new Gson().fromJson(new FileReader(filePath, StandardCharsets.UTF_8), JsonObject.class);
 
             // Imprime la tabla de monedas
             // Definir las longitudes máximas
@@ -177,7 +201,6 @@ public class ListasDivisas {
             int maxCodeLength = Code.length();
             int maxNameLength = Name.length();
             int maxCountryLength = Country.length();
-
 
             for (String key : jsonObject.keySet()) {
                 JsonObject currency = jsonObject.getAsJsonObject(key);
@@ -217,11 +240,16 @@ public class ListasDivisas {
         }
     }
 
-    // Método para verificar si un archivo existe en un directorio
+    /**
+     * Verifica si un archivo existe en el directorio especificado.
+     *
+     * @param filePath La ruta del directorio.
+     * @param fileName El nombre del archivo.
+     * @return true si el archivo existe, false de lo contrario.
+     */
     private static boolean fileExists(String filePath, String fileName) {
         String completeFilePath = filePath + fileName;
         File file = new File(completeFilePath);
         return file.exists();
     }
 }
-

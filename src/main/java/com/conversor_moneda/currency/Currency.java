@@ -1,7 +1,7 @@
-package com.conversor_moneda.logic.currency_converter;
+package com.conversor_moneda.currency;
 
-import com.conversor_moneda.logic.api.Api;
-import com.conversor_moneda.logic.error.MyError;
+import com.conversor_moneda.api.Api;
+import com.conversor_moneda.error.MyError;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -27,9 +27,8 @@ public class Currency {
         // Asegura que el código de la moneda esté en mayúsculas
         currencyCode = currencyCode.toUpperCase();
 
-        Api api = new Api();
         try {
-            api.currencyCodeExits(currencyCode);
+            Api.currencyCodeExists(currencyCode);
         } catch (NullPointerException e) {
             MyError.println(e.getMessage());
         }
@@ -41,8 +40,8 @@ public class Currency {
         Gson gson = new Gson();
 
         // Objetos JsonObject para almacenar los datos del JSON
-        JsonObject supportedCurrenciesJsonObject = null;
-        JsonObject convertionRateJsonObject = null;
+        JsonObject supportedCurrenciesJsonObject;
+        JsonObject convertionRateJsonObject;
         try {
             // Lee el archivo JSON de monedas admitidas
             JsonObject jsonObject = gson.fromJson(new FileReader(resourcesPath + "supported_currencies.json"),
@@ -76,30 +75,21 @@ public class Currency {
     }
 
     /**
-     * Obtiene el nombre de la moneda.
-     *
-     * @return Nombre de la moneda
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Obtiene el país de la moneda.
-     *
-     * @return País de la moneda
-     */
-    public String getCountry() {
-        return country;
-    }
-
-    /**
      * Obtiene la tasa de conversión de la moneda a USD.
      *
      * @return Tasa de conversión a USD
      */
     public float getRateToUSD() {
         return rateToUSD;
+    }
+
+    /**
+     * Establece la tasa de conversión a USD.
+     *
+     * @param rateToUSD la tasa de conversión a USD
+     */
+    public void setRateToUSD(float rateToUSD) {
+        this.rateToUSD = rateToUSD;
     }
 
     /**
@@ -141,24 +131,5 @@ public class Currency {
     @Override
     public int hashCode() {
         return Objects.hash(code);
-    }
-
-    /**
-     * Método principal para probar la clase Currency.
-     *
-     * @param args Argumentos de la línea de comandos
-     */
-    public static void main(String[] args) {
-        // Crear una instancia de la moneda DOP (Peso Dominicano)
-        Currency dop = new Currency("dop");
-        System.out.println(dop);
-
-        // Crear una instancia de la moneda USD (Dólar Estadounidense)
-        Currency usd = new Currency("usd");
-        System.out.println("\n" + usd);
-
-        // Crear una instancia de la moneda EUR (Euro)
-        Currency eur = new Currency("eur");
-        System.out.println("\n" + eur);
     }
 }
